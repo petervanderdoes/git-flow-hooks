@@ -1,0 +1,34 @@
+#!/bin/sh
+#
+# Runs at the end of git flow hotfix start
+#
+# Positional arguments:
+# $1    The version (including the version prefix)
+# $2    The origin remote
+# $3    The full branch name (including the feature prefix)
+# $4    The base from which this feature is started
+#
+VERSION=$1
+ORIGIN=$2
+BRANCH=$3
+BASE=$4
+
+# Implement your script here.
+. "$HOOKS_DIR"/gitflow-functions
+ROOTDIR=$(git rev-parse --show-toplevel)
+TMPFILE=$(mktemp --suffix=.gitflow)
+
+LINENUMBER=$(($(grep -m1 -n "^#### " $ROOTDIR/Changes.mdown | cut -f1 -d:) -1 ))
+sed ''$LINENUMBER'a#### '$VERSION'\n* Preparation for hotfix.\n' $ROOTDIR/Changes.mdown > $TMPFILE
+cp $TMPFILE $ROOTDIR/Changes.mdown
+
+gitflow_set_major_minor $VERSION
+AVH_PRE_RELEASE="-rc.1"
+gitflow_build_version
+gitflow_update_version $AVH_VERSION "Start of hotfix development"
+
+#Clean up
+rm -f $TMPFILE
+
+# To terminate the git-flow action, return a non-zero exit code.
+exit 0

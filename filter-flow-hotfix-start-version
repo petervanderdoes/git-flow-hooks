@@ -1,0 +1,30 @@
+#!/bin/sh
+#
+# Runs during git flow release start
+#
+# Positional arguments:
+# $1    Version
+#
+# Return VERSION - When VERSION is returned empty gitflow 
+#	will stop as the version is necessary
+#
+VERSION=$1
+
+# Implement your script here.
+. "$HOOKS_DIR"/gitflow-functions
+ROOTDIR=$(git rev-parse --show-toplevel)
+current_branch=$(git rev-parse --abbrev-ref HEAD)
+
+gitflow_set_major_minor $VERSION
+
+git checkout -q "$MASTER_BRANCH"
+VERSION=$(grep -m1 "GITFLOW_VERSION=" $ROOTDIR/git-flow-version | cut -f2 -d"=")
+gitflow_set_major_minor $VERSION
+AVH_PATCH_LEVEL=$(($AVH_PATCH_LEVEL+1))
+git checkout -q $current_branch
+
+gitflow_build_version
+
+# Return the VERSION
+echo ${AVH_VERSION}
+exit 0
