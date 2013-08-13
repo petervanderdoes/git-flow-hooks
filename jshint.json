@@ -1,0 +1,10 @@
+{
+    "browser": true,
+    "predef": [ "jQuery", "BBBX", "$", "contain", "asyncTest" ],
+    "strict": true,
+    "white": true,
+    "undef": true,
+  	"unused": false,
+    "trailing": true,
+    "camelcase": false
+}

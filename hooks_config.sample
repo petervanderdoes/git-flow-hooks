@@ -1,0 +1,7 @@
+MAINFILE=Changes.mdown
+
+_update_version() {
+        #Update the version number
+        sed -i 's/^GITFLOW_VERSION=.*/GITFLOW_VERSION='$1'/' $ROOTDIR/git-flow-version
+        sed -i '0,/####.*/s/^####.*/#### '$1'/' $ROOTDIR/Changes.mdown
+}

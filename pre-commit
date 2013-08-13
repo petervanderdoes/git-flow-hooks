@@ -1,0 +1,30 @@
+#!/bin/sh
+REPO_DIR=$(git rev-parse --show-toplevel)
+DOT_GIT_DIR=$(git rev-parse --git-dir)
+if [ "$DOT_GIT_DIR" = ".git" ]; then
+	DOT_GIT_DIR="$REPO_DIR"/"$DOT_GIT_DIR"
+fi
+HOOKS_DIR="$DOT_GIT_DIR"/hooks
+. "$HOOKS_DIR"/gitflow-functions
+
+HOOK_ERROR=0
+
+echo ${WHITE}
+
+for module in $pre_commit_modules; do
+    module_path="$HOOKS_MODULES_DIR/$module"
+    [ ! -e $module_path ] && continue
+    . "$HOOKS_MODULES_DIR/$module"
+    if [ $? -eq 1 ] ; then
+        HOOK_ERROR=1
+    fi
+done
+
+if [ $HOOK_ERROR -eq 1 ] ; then
+	echo "\n${CROSS}${RED} Time to fix your code!\n"
+else
+	echo "\n${CHECK}${GREEN} Good job!\n"
+fi
+
+echo ${WHITE}
+exit $HOOK_ERROR
