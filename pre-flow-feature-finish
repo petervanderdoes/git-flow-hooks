@@ -26,7 +26,17 @@ gitflow_set_major_minor $CURRENT_VERSION
 gitflow_set_dev_release
 gitflow_build_version
 
-gitflow_update_version $AVH_VERSION
+ISSUENR=$(echo ${NAME#*_})
+if gitflow_validInt "$ISSUENR"; then
+	MESSAGE="Version bump $AVH_VERSION
+
+Closes #$ISSUENR
+"
+else
+	MESSAGE=""
+fi
+
+gitflow_update_version $AVH_VERSION "$MESSAGE"
 
 #Clean up
 # To terminate the git-flow action, return a non-zero exit code.

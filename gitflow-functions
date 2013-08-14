@@ -180,3 +180,13 @@ gitflow_commit_files() {
 gitflow_count_commit_files() {
 	echo $(gitflow_commit_files $@) | wc -w | tr -d ' '
 }
+
+gitflow_validInt() {
+	local _return
+
+	[ -n "$1" ] || return 1
+	case ${_flags_int_} in
+		*[!0-9]*) _return=1 ;;
+		*) _return=0 ;;
+	  esac
+}
