@@ -26,7 +26,19 @@ gitflow_set_major_minor $CURRENT_VERSION
 gitflow_set_dev_release
 gitflow_build_version
 
-gitflow_update_version $AVH_VERSION
+# If the branch names ends with _nr where nr is a number it adds the line Closes #nr
+# This makes github automatically close that issue when the develop branch is pushed.
+ISSUENR=$(echo ${NAME##*_})
+if gitflow_validInt "$ISSUENR"; then
+	MESSAGE="Version bump $AVH_VERSION
+
+Closes #$ISSUENR
+"
+else
+	MESSAGE=""
+fi
+
+gitflow_update_version $AVH_VERSION "$MESSAGE"
 
 #Clean up
 # To terminate the git-flow action, return a non-zero exit code.
