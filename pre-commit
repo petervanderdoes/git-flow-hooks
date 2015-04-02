@@ -6,6 +6,7 @@ if [ "$DOT_GIT_DIR" = ".git" ]; then
 fi
 HOOKS_DIR="$DOT_GIT_DIR"/hooks
 . "$HOOKS_DIR"/gitflow-functions
+. "$HOOKS_DIR"/config.sh
 
 HOOK_ERROR=0
 
