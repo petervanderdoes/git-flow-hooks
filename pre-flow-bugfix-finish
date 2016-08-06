@@ -1,0 +1,45 @@
+#!/bin/sh
+#
+# Runs before git flow bugfix finish
+#
+# Positional arguments:
+# $1    The friendly name of the branch
+# $2    The origin remote
+# $3    The full branch name (including the feature prefix)
+#
+NAME=$1
+ORIGIN=$2
+BRANCH=$3
+
+# Implement your script here.
+. "$HOOKS_DIR"/gitflow-functions
+
+ROOTDIR=$(git rev-parse --show-toplevel)
+
+gitflow_update_authors
+
+# Prepare new version
+# HOOKS_DIR is defined in gitflow-common.
+CURRENT_VERSION=$(gitflow_get_current_version)
+
+gitflow_set_major_minor $CURRENT_VERSION
+gitflow_set_dev_release
+gitflow_build_version
+
+# If the branch names ends with _nr where nr is a number it adds the line Closes #nr
+# This makes github automatically close that issue when the develop branch is pushed.
+ISSUENR=$(echo ${NAME##*_})
+if gitflow_validInt "$ISSUENR"; then
+	MESSAGE="Version bump $AVH_VERSION
+
+Closes #$ISSUENR
+"
+else
+	MESSAGE=""
+fi
+
+gitflow_update_version $AVH_VERSION "$MESSAGE"
+
+#Clean up
+# To terminate the git-flow action, return a non-zero exit code.
+exit 0
