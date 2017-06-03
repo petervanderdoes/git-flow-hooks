@@ -24,9 +24,9 @@ AVH_PATCH_LEVEL=0
 gitflow_set_dev_release
 gitflow_build_version
 
-LINENUMBER=$(($(grep -m1 -n "^#### " $ROOTDIR/Changes.mdown | cut -f1 -d:) -1 ))
-sed ''$LINENUMBER'a#### '$AVH_VERSION' =\n* Preparation for new development cycle.\n' $ROOTDIR/Changes.mdown > $TMPFILE
-cp $TMPFILE $ROOTDIR/Changes.mdown
+LINENUMBER=$(($(grep -m1 -n "^#### " $ROOTDIR/$CHANGELOG | cut -f1 -d:) -1 ))
+sed ''$LINENUMBER'a#### '$AVH_VERSION' =\n* Preparation for new development cycle.\n' $ROOTDIR/$CHANGELOG > $TMPFILE
+cp $TMPFILE $ROOTDIR/$CHANGELOG
 
 gitflow_update_version $AVH_VERSION "Preparation for new development cycle after release $VERSION"
 
